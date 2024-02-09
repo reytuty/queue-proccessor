@@ -51,21 +51,21 @@ var QueueProccessor = /** @class */ (function () {
         this.procccessLoopId = null;
     }
     QueueProccessor.prototype.start = function () {
-        var _this = this;
-        if (this.started || this.proccessing) {
-            return;
-        }
         this.started = true;
         if (this.queue.length) {
             this.proccessQueue();
             return;
         }
+        this.startCheck();
+    };
+    QueueProccessor.prototype.startCheck = function () {
+        var _this = this;
         if (this.procccessLoopId) {
             clearInterval(this.procccessLoopId);
         }
         this.procccessLoopId = setInterval(function () {
             _this.checkQueue();
-        }, 100);
+        }, 1000);
     };
     Object.defineProperty(QueueProccessor.prototype, "isProccessing", {
         get: function () {
@@ -98,8 +98,9 @@ var QueueProccessor = /** @class */ (function () {
             return;
         }
         if (this.queue.length) {
-            this.proccessQueue();
             this.stopCheck();
+            this.proccessQueue();
+            return;
         }
     };
     QueueProccessor.prototype.add = function (data) {
@@ -135,7 +136,7 @@ var QueueProccessor = /** @class */ (function () {
                     case 4:
                         this.proccessing = false;
                         if (this.started) {
-                            return [2 /*return*/, this.checkQueue()];
+                            return [2 /*return*/, this.startCheck()];
                         }
                         return [2 /*return*/];
                 }

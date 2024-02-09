@@ -11,6 +11,7 @@ export declare class QueueProccessor<T> {
     private procccessLoopId;
     constructor(proccessor: (data: T) => Promise<any>);
     start(): void;
+    protected startCheck(): void;
     get isProccessing(): boolean;
     get isStarted(): boolean;
     get queueLength(): number;

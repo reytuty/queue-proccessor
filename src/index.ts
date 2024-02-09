@@ -10,20 +10,20 @@ export class QueueProccessor<T> {
   private procccessLoopId: any = null;
   constructor(protected proccessor: (data: T) => Promise<any>) {}
   start() {
-    if (this.started || this.proccessing) {
-      return;
-    }
     this.started = true;
     if (this.queue.length) {
       this.proccessQueue();
       return;
     }
+    this.startCheck();
+  }
+  protected startCheck() {
     if (this.procccessLoopId) {
       clearInterval(this.procccessLoopId);
     }
     this.procccessLoopId = setInterval(() => {
       this.checkQueue();
-    }, 100);
+    }, 1000);
   }
   public get isProccessing() {
     return this.proccessing;
@@ -44,8 +44,9 @@ export class QueueProccessor<T> {
       return;
     }
     if (this.queue.length) {
-      this.proccessQueue();
       this.stopCheck();
+      this.proccessQueue();
+      return;
     }
   }
   add(data: T) {
@@ -64,7 +65,7 @@ export class QueueProccessor<T> {
     }
     this.proccessing = false;
     if (this.started) {
-      return this.checkQueue();
+      return this.startCheck();
     }
   }
   stop() {
