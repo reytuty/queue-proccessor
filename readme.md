@@ -1,15 +1,15 @@
 # Queue Proccessor
 
-To proccess a queue and handle be able to start and stop the proccess.
+To process a queue centrally. Making it possible to start and stop the process at any time.
 
-This project starts to deal with a problem to dispatch message to SQS and Pub/Sub but the client sdk doesn't deal with no async dispatch messages, when you didn't use `await` to wait dispatch or when we are using in another part of the code and the client has to much messages.
+This project started to deal with an issue when dispatching messages to SQS and Pub/Sub as the client SDK doesn't handle any asynchronous dispatch messages, when you haven't used `await` to wait for dispatch or when we are using it in another part of the code and the client has many messages.
 
-To void lost messages we need to create a pool of messages and send one by one, quickly than as possible.
+To avoid lost messages, we need to create a set of messages and send them one by one as quickly as possible.
 
 ## Usage
 
 ```
-import { QueueProccessor } from "../index";
+import { QueueProccessor } from "queue-proccessor";
 
 async function myHandlerProccessMethod (data: number) {
   return new Promise((resolve) => {
